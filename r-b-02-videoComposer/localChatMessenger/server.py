@@ -1,8 +1,10 @@
 import socket
 import os
+from faker import Faker
 
 sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 server_address = '/tmp/socket_file'
+fake = Faker()
 
 try:
   os.unlink(server_address)
@@ -18,17 +20,20 @@ while True:
   connection, client_address = sock.accept()
 
   try:
-    print('connection from', client_address)
+    print('connection from ', client_address)
 
     while True:
-      data = connection.recv(16)
-      data_str = data.decode('utf-8')
-      print('Received' + data_str)
+      data = connection.recv(1048)
       if data:
-        response = 'Processing ' + data_str
-        connection.sendall(response.encode())
+        data_str = data.decode('utf-8')
+        print('Received ' + data_str)
+        response = f"Processing {data_str} //"
+        reply = f"Thank you for telling me your name! My name is {fake.name()}"
+        connection.send(response.encode())
+        connection.send(reply.encode())
       else:
         print('no data from', client_address)
+        break
 
   finally:
     print("Closing current connection")

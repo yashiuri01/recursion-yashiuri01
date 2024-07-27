@@ -12,19 +12,22 @@ except socket.error as err:
   sys.exit(1)
 
 try:
-  message = b'Sending a message to the server side'
-  sock.sendall(message)
-  sock.settimeout(2)
+  message = input('Enter your name: ')
+  messageBytes = message.encode('utf-8')
+  sock.sendall(messageBytes)
+  sock.settimeout(30)
 
   try:
     while True:
-      data = str(sock.recv(32))
+      data = str(sock.recv(1048))
       if data:
         print('Server response: '+ data)
       else:
         break
   except(TimeoutError):
     print('Socket timeout, ending listening for server messages')
+  except Exception as e:
+    print(f"An error occurred: {e}")
 
 finally:
   print('closing socket')
