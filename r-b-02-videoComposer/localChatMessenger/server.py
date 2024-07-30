@@ -23,7 +23,7 @@ while True:
     print('connection from ', client_address)
 
     while True:
-      data = connection.recv(1048)
+      data = connection.recv(10)
       if data:
         data_str = data.decode('utf-8')
         print('Received ' + data_str)
@@ -38,4 +38,3 @@ while True:
   finally:
     print("Closing current connection")
     connection.close()
-
